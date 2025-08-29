@@ -2,7 +2,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+This project uses a mock API server. You need to run two processes in separate terminals: the Next.js development server and the JSON server.
+
+### 1. Run the JSON Server
+
+This command starts a mock API server using `json-server`.
+
+```bash
+npm run server
+```
+
+The server will run on [http://localhost:4000](http://localhost:4000).
+
+### 2. Run the Development Server
+
+This command starts the Next.js development server.
 
 ```bash
 npm run dev
