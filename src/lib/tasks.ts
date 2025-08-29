@@ -2,7 +2,7 @@ import axios from "axios";
 import { Task, CreateTaskInput, UpdateTaskInput } from "@/lib/typing";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
 });
 
 export const getTasks = async (): Promise<Task[]> => {
