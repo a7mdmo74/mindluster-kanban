@@ -13,8 +13,7 @@ export const getTasks = async (): Promise<Task[]> => {
 export const createTask = async (input: CreateTaskInput): Promise<Task> => {
   const res = await api.post("/tasks", {
     ...input,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    column: input.column ?? "backlog",
   });
   return res.data;
 };
@@ -25,7 +24,6 @@ export const updateTask = async (
 ): Promise<Task> => {
   const res = await api.patch(`/tasks/${id}`, {
     ...updates,
-    updatedAt: new Date(),
   });
   return res.data;
 };
