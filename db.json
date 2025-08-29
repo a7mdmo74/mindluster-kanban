@@ -35,6 +35,12 @@
       "title": "HiHi",
       "description": "HiHiHi",
       "column": "in-progress"
+    },
+    {
+      "title": "Test",
+      "description": "Test",
+      "column": "in-progress",
+      "id": "wsuqgn"
     }
   ]
 }

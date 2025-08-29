@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "server": "npx json-server --watch db.json --port 4000",
     "lint": "eslint"
   },
   "dependencies": {
