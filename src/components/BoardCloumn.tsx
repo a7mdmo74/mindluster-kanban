@@ -23,7 +23,16 @@ const BoardColumn = ({
   return (
     <Paper
       sx={{
-        width: 320,
+        width: {
+          xs: "100%",
+          sm: 300,
+          md: 320,
+        },
+        minWidth: {
+          xs: 280,
+          sm: 300,
+          md: 320,
+        },
         minHeight: 600,
         backgroundColor: "background.paper",
         border: `2px solid ${"border"}`,
@@ -102,18 +111,6 @@ const BoardColumn = ({
                 >
                   No tasks yet
                 </Typography>
-                <IconButton
-                  onClick={() => onAddTask(column)}
-                  sx={{
-                    color: "text.primary",
-                    "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.1)" },
-                  }}
-                >
-                  <Add />
-                  <Typography variant="body2" sx={{ ml: 1 }}>
-                    Add first task
-                  </Typography>
-                </IconButton>
               </Box>
             )}
           </Box>

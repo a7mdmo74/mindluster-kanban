@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,16 +5,16 @@ import {
   DialogActions,
   TextField,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Box,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Task, TaskColumn } from "@/lib/typing";
-
 import { useCreateTask, useUpdateTask } from "@/hooks/useTasks";
+
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -23,6 +22,16 @@ interface TaskModalProps {
   task?: Task | null;
   defaultColumn: TaskColumn;
 }
+
+interface TaskFormInputs {
+  title: string;
+  description: string;
+}
+
+const schema = yup.object().shape({
+  title: yup.string().required("Title is required").min(3, "At least 3 chars"),
+  description: yup.string().required(),
+});
 
 const TaskModal = ({
   isOpen,
@@ -32,40 +41,42 @@ const TaskModal = ({
 }: TaskModalProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  // React Query mutations
   const createTask = useCreateTask();
   const updateTask = useUpdateTask();
 
-  // Form state
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [column, setColumn] = useState<TaskColumn>(defaultColumn);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<TaskFormInputs>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
 
   useEffect(() => {
     if (task) {
-      setTitle(task.title);
-      setDescription(task.description || "");
-      setColumn(task.column);
+      reset({
+        title: task.title,
+        description: task.description || "",
+      });
     } else {
-      setTitle("");
-      setDescription("");
-      setColumn(defaultColumn);
+      reset({
+        title: "",
+        description: "",
+      });
     }
-  }, [task, defaultColumn, isOpen]);
+  }, [task, reset, isOpen]);
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
-
+  const onSubmit = (data: TaskFormInputs) => {
     if (task) {
-      // ✅ Update existing task
       updateTask.mutate(
         {
           id: task.id,
-          updates: {
-            title: title.trim(),
-            description: description.trim(),
-            column,
-          },
+          updates: { ...data, column: task.column },
         },
         {
           onSuccess: () => {
@@ -77,13 +88,8 @@ const TaskModal = ({
         }
       );
     } else {
-      // ✅ Create new task
       createTask.mutate(
-        {
-          title: title.trim(),
-          description: description.trim(),
-          column,
-        },
+        { ...data, column: defaultColumn },
         {
           onSuccess: () => {
             enqueueSnackbar("Task created successfully", {
@@ -97,23 +103,20 @@ const TaskModal = ({
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      PaperProps={{
-        sx: { borderRadius: 3 },
-      }}
-    >
+    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{task ? "Edit Task" : "Create New Task"}</DialogTitle>
 
       <DialogContent>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+        >
           <TextField
             label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            {...register("title")}
+            error={!!errors.title}
+            helperText={errors.title?.message}
             fullWidth
             required
             autoFocus
@@ -121,36 +124,23 @@ const TaskModal = ({
 
           <TextField
             label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            {...register("description")}
+            error={!!errors.description}
+            helperText={errors.description?.message}
             fullWidth
             multiline
             rows={3}
           />
-
-          <FormControl fullWidth>
-            <InputLabel>Column</InputLabel>
-            <Select
-              value={column}
-              label="Column"
-              onChange={(e) => setColumn(e.target.value as TaskColumn)}
-            >
-              <MenuItem value="backlog">Backlog</MenuItem>
-              <MenuItem value="in-progress">In Progress</MenuItem>
-              <MenuItem value="review">Review</MenuItem>
-              <MenuItem value="done">Done</MenuItem>
-            </Select>
-          </FormControl>
         </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
           variant="contained"
           disabled={
-            !title.trim() || createTask.isPending || updateTask.isPending
+            isSubmitting || createTask.isPending || updateTask.isPending
           }
         >
           {task ? "Update" : "Create"} Task
