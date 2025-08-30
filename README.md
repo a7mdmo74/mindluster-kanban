@@ -1,50 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mindluster Kanban
+
+Mindluster Kanban is a modern Kanban board application built with [Next.js](https://nextjs.org), [React](https://react.dev), [Material UI](https://mui.com/), [Zustand](https://zustand-demo.pmnd.rs/), and [React Query](https://tanstack.com/query/v5). It features drag-and-drop task management, real-time updates, and a beautiful, responsive UI.
+
+## Features
+
+- 📝 Create, edit, and delete tasks
+- 📋 Organize tasks into columns: Backlog, In Progress, Review, Done
+- 🔍 Search tasks by title or description
+- 🟦 Drag and drop tasks between columns
+- ⚡ Instant UI updates with React Query and Zustand
+- 🎨 Built with Material UI for a modern look
+- 🗃️ Mock API with JSON Server (no backend required)
 
 ## Getting Started
 
 This project uses a mock API server. You need to run two processes in separate terminals: the Next.js development server and the JSON server.
 
-### 1. Run the JSON Server
+### 1. Start the Mock API Server
 
-This command starts a mock API server using `json-server`.
+This project uses [JSON Server](https://github.com/typicode/json-server) to mock a REST API for tasks. Start it with:
 
 ```bash
 npm run server
 ```
 
-The server will run on [http://localhost:4000](http://localhost:4000).
+The server will run at [http://localhost:4000](http://localhost:4000).
 
-### 2. Run the Development Server
+### 2. Start the Next.js Development Server
 
-This command starts the Next.js development server.
+In a separate terminal, run:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Usage
 
-## Learn More
+- **Add a Task:** Click the "Add Task" button in any column.
+- **Edit/Delete a Task:** Hover over a task card to reveal edit and delete icons.
+- **Move Tasks:** Drag and drop tasks between columns.
+- **Search:** Use the search bar at the top to filter tasks by title or description.
 
-To learn more about Next.js, take a look at the following resources:
+All data is stored in `db.json` and managed via the mock API.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
 
-## Deploy on Vercel
+- Next.js 15
+- React 19
+- Material UI 7
+- Zustand (state management)
+- React Query (data fetching/caching)
+- JSON Server (mock API)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/components/` – UI components (Board, BoardColumn, TaskCard, TaskModal)
+- `src/hooks/` – React Query hooks for tasks
+- `src/lib/` – API functions and typings
+- `src/store/` – Zustand store for UI state
+- `db.json` – Mock database for tasks
+
+## Customization
+
+- You can edit `db.json` to pre-populate tasks or change the schema.
+- UI and logic can be customized in the `src/` directory.
+
+## License
+
+This project is for educational/demo purposes. Feel free to use and modify it!
